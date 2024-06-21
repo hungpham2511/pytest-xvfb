@@ -1,9 +1,8 @@
-from __future__ import annotations
-
 import atexit
 import os
 import os.path
 import sys
+import typing
 
 import pytest
 import pyvirtualdisplay
@@ -122,7 +121,7 @@ def pytest_configure(config: pytest.Config) -> None:
     config.addinivalue_line("markers", "no_xvfb: Skip test when using Xvfb")
 
 
-def pytest_collection_modifyitems(items: list[pytest.Item]) -> None:
+def pytest_collection_modifyitems(items: typing.List[pytest.Item]) -> None:
     for item in items:
         if item.get_closest_marker("no_xvfb") and xvfb_instance is not None:
             skipif_marker = pytest.mark.skipif(True, reason="Skipped with Xvfb")
@@ -130,5 +129,5 @@ def pytest_collection_modifyitems(items: list[pytest.Item]) -> None:
 
 
 @pytest.fixture(scope="session")
-def xvfb() -> Xvfb | None:
+def xvfb() -> typing.Union[Xvfb, None]:
     return xvfb_instance
